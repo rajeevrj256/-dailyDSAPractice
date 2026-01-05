@@ -1,25 +1,20 @@
 class Solution {
 public:
     int findMin(vector<int>& nums) {
-        int n= nums.size();
-        int start=0;
-        int end=n-1;
-        int minele=INT_MAX;
+        int i=0;
+        int n=nums.size();
+        int j=n-1;
 
-        while(start<end){
-            int mid=(start+end)/2;
-            //minele=min(minele,nums[mid]);
+        while(i<j){
+            int mid=(i+j)/2;
 
-            if(nums[mid]>nums[end] ){
-                
-                start=mid+1;
-            }else{
-                end=mid;
-                
-            }
-
+           if(nums[mid]>nums[j]){
+            i=mid+1;
+           }else{
+            j=mid;
+           }
         }
 
-        return nums[start];
+        return nums[i];
     }
 };
