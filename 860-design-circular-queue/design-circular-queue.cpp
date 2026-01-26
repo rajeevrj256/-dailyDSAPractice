@@ -1,83 +1,58 @@
 class MyCircularQueue {
 public:
-    class Node{
-        public:
-        int val;
-        Node* next;
-
-        Node(int val){
-             this->val = val;
-            this->next = nullptr;
-        }
-    };
-    int size;
-    int insertCount;
-    Node * head ;
-    Node* curr;
+    int rear;
+    int front;
+    vector<int>queue;
+    int cap;
     MyCircularQueue(int k) {
-        size=k;
-        insertCount=0;
-        head=NULL;
-        curr=NULL;
+        cap=k;
+        queue.resize(k);
+        front=-1;
+        rear=-1;
     }
     
     bool enQueue(int value) {
-        
-        if(isFull())return false;
-
-        Node* temp=new Node(value);
-
-        if(isEmpty()){
-            head=temp;
-            curr=temp;
-            temp->next=temp;
-            
-        }else{
-            temp->next=head;
-            curr->next=temp;
-            curr=temp;
+        if(isFull()){
+           return false; 
         }
-        insertCount++;
 
+        if(front==-1){
+            front=rear=0;
+        }else{
+            rear=(rear+1)%cap;
+        }
 
+        queue[rear]=value;
         return true;
-
     }
     
     bool deQueue() {
-        if(isEmpty())return false;
-        if(head==curr){
-            delete head;
-            head=NULL;
-            curr=NULL;
-
+        if(isEmpty()) return false;
+        if(front==rear){
+            front=rear=-1;
         }else{
-
-        Node* temp=head;
-        head=head->next;
-        curr->next=head;
-        delete temp;
+        front=(front+1)%cap;
         }
-        insertCount--;
 
         return true;
         
     }
     
     int Front() {
-        return (isEmpty()?-1:head->val);
+        
+        return !isEmpty()?queue[front]:-1;
     }
     
     int Rear() {
-        return (isEmpty()?-1:curr->val);
+        return !isEmpty()? queue[rear]:-1;
     }
     
     bool isEmpty() {
-        return insertCount==0;
+        return front==-1;
     }
     
     bool isFull() {
-        return insertCount==size;
+        return front==(rear+1)%cap;
     }
 };
 
