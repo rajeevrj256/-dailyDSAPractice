@@ -33,12 +33,7 @@ public:
           temp=temp->next;
         }
 
-        if(l1){
-            temp=l1;
-        }
-        if(l2){
-            temp=l2;
-        }
+       
         return dummy->next;
     }
 };
