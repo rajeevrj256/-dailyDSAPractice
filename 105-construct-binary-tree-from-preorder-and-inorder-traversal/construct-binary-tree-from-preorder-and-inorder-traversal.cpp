@@ -11,16 +11,17 @@
  */
 class Solution {
 public:
-    TreeNode*build(vector<int>&preorder,int preOrderStart,int preOrderEnd,vector<int>&inorder,int inOrderStart,int inOrderEnd,unordered_map<int,int>&hash){
-        if(preOrderStart>preOrderEnd ||inOrderStart>inOrderEnd) return NULL;
-        TreeNode* root=new TreeNode(preorder[preOrderStart]);
-        int rootIndex=preorder[preOrderStart];
-        int index=hash[rootIndex];
+int preStart=0;
+    TreeNode*build(vector<int>&preorder,vector<int>&inorder,int inOrderStart,int inOrderEnd,unordered_map<int,int>&hash){
+        if(inOrderStart>inOrderEnd) return NULL;
+        int rootval=preorder[preStart++];
+        TreeNode* root=new TreeNode(rootval);
+        
+        int index=hash[rootval];
 
-        int length=index-inOrderStart;
 
-        root->left=build(preorder,preOrderStart+1,preOrderStart+length,inorder,inOrderStart,inOrderStart+length,hash );
-        root->right=build(preorder,preOrderStart+length+1,preOrderEnd,inorder,inOrderStart+length+1,inOrderEnd,hash );
+        root->left=build(preorder,inorder,inOrderStart,index-1,hash );
+        root->right=build(preorder,inorder,index+1,inOrderEnd,hash );
 
         return root;
     }
@@ -32,6 +33,6 @@ public:
             i++;
         }
         int n=preorder.size();
-        return build(preorder,0,n-1,inorder,0,n-1,hash);
+        return build(preorder,inorder,0,n-1,hash);
     }
 };
