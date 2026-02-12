@@ -11,27 +11,30 @@
  */
 class Solution {
 public:
-    TreeNode* helper(vector<int>&preorder,int prestart,int prend,vector<int>&postorder,int poststart,int postend,unordered_map<int,int>map){
-           if(prestart>prend || poststart>postend)return NULL;
+   int prestart=0;
+    TreeNode* build(vector<int>&preorder,vector<int>&postorder,int postS,int postE,unordered_map<int,int>&hash){
+ if(postS > postE) return NULL;
+        TreeNode*root=new TreeNode(preorder[prestart++]);
+        
+        if(postS==postE || prestart >= preorder.size()) return root;
 
-           TreeNode* root=new TreeNode(preorder[prestart]);
-           if (prestart == prend) return root;
-           int leftSubtreeRoot = preorder[prestart + 1];
-           int inroot=map[leftSubtreeRoot];
-           int numsleft=inroot-poststart+1;
+        int leftRoot=preorder[prestart];
+        int index=hash[leftRoot];
+        
+        int leftSize=index-postS+1;
+        root->left=build(preorder,postorder,postS,index,hash);
+        root->right=build(preorder,postorder,index+1,postE-1,hash);
 
-           root->left=helper(preorder,prestart+1,prestart+numsleft,postorder,poststart,inroot,map);
-           root->right=helper(preorder,prestart+1+numsleft,prend,postorder,inroot+1,postend-1,map);
-
-           return root;
-
+        return root;
     }
     TreeNode* constructFromPrePost(vector<int>& preorder, vector<int>& postorder) {
         unordered_map<int,int>hash;
-        for(int i=0;i<postorder.size();i++){
-            hash[postorder[i]]=i;
-
+       int i=0;
+        for(int post:postorder){
+            hash[post]=i++;
         }
-        return helper(preorder,0,preorder.size()-1,postorder,0,postorder.size()-1,hash);
+        int n=postorder.size();
+
+        return build(preorder,postorder,0,n-1,hash);
     }
 };
