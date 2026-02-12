@@ -11,27 +11,27 @@
  */
 class Solution {
 public:
-    TreeNode* solve(vector<int>&preorder,int preStart,int preEnd,vector<int>&inorder,int inStart,int inEnd,unordered_map<int,int>&hash){
-        if(preStart>preEnd || inStart>inEnd) return NULL;
-        TreeNode* root = new TreeNode(preorder[preStart]);
-        int index=hash[preorder[preStart]];
-        int leftpart=index-inStart;
+    TreeNode*build(vector<int>&preorder,int preOrderStart,int preOrderEnd,vector<int>&inorder,int inOrderStart,int inOrderEnd,unordered_map<int,int>&hash){
+        if(preOrderStart>preOrderEnd ||inOrderStart>inOrderEnd) return NULL;
+        TreeNode* root=new TreeNode(preorder[preOrderStart]);
+        int rootIndex=preorder[preOrderStart];
+        int index=hash[rootIndex];
 
-        root->left=solve(preorder,preStart+1,preStart+leftpart,inorder,inStart,index-1,hash);
-        root->right=solve(preorder,preStart+leftpart+1,preEnd,inorder,index+1,inEnd,hash);
+        int length=index-inOrderStart;
+
+        root->left=build(preorder,preOrderStart+1,preOrderStart+length,inorder,inOrderStart,inOrderStart+length,hash );
+        root->right=build(preorder,preOrderStart+length+1,preOrderEnd,inorder,inOrderStart+length+1,inOrderEnd,hash );
 
         return root;
-
-
     }
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
         unordered_map<int,int>hash;
-        int n=inorder.size();
-        for(int i=0;i<n;i++){
-            hash[inorder[i]]=i;
+        int i=0;
+        for(int in:inorder){
+            hash[in]=i;
+            i++;
         }
-        
-        return solve(preorder,0,preorder.size()-1,inorder,0,inorder.size()-1,hash);
-
+        int n=preorder.size();
+        return build(preorder,0,n-1,inorder,0,n-1,hash);
     }
 };
