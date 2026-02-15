@@ -21,24 +21,31 @@
  */
 class Solution {
 public:
-    TreeNode* sortedListToBST(ListNode* head) {
-        // bc
-        if(head==NULL) return NULL;
-        if(head->next==NULL) return new TreeNode(head->val);
+    ListNode* findMiddle(ListNode*head,ListNode* & prev){
+        ListNode*slow=head;
+        ListNode*fast=head;
 
-        ListNode* slow=head;
-        ListNode* fast= head;
-        ListNode* prev=NULL;
-        while(fast!=NULL && fast->next!=NULL){
+        while(fast && fast->next){
             prev=slow;
-            fast=fast->next->next;
             slow=slow->next;
+            fast=fast->next->next;
         }
+
+        return slow; 
+    }
+    TreeNode* sortedListToBST(ListNode* head) {
+        if(head==NULL) return NULL;
+ if(head->next == NULL)
+            return new TreeNode(head->val);
+        ListNode*prev=NULL;
+        ListNode* middle=findMiddle(head,prev);
+       
         prev->next=NULL;
-        TreeNode* root= new TreeNode(slow->val);
-        root->left= sortedListToBST(head);
-        root->right= sortedListToBST(slow->next);
-        return root;
-        
+
+        TreeNode* root=new TreeNode(middle->val);
+        root->left=sortedListToBST(head);
+        root->right=sortedListToBST(middle->next);
+
+        return root; 
     }
 };
