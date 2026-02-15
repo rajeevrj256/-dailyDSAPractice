@@ -21,31 +21,25 @@
  */
 class Solution {
 public:
-    ListNode* findMiddle(ListNode*head,ListNode* & prev){
-        ListNode*slow=head;
-        ListNode*fast=head;
+     TreeNode* convert(vector<int>& arr, int start, int end) {
+        if (start > end)
+            return NULL;
+        int mid = start + (end - start) / 2;
+        TreeNode* node = new TreeNode(arr[mid]);
+        node->left = convert(arr, start, mid - 1);
+        node->right = convert(arr, mid + 1, end);
 
-        while(fast && fast->next){
-            prev=slow;
-            slow=slow->next;
-            fast=fast->next->next;
+        return node;
+    }
+
+    TreeNode* sortedListToBST(ListNode* head) {
+        vector<int> arr;
+        ListNode* temp = head;
+        while (temp) {
+            arr.push_back(temp->val);
+            temp = temp->next;
         }
 
-        return slow; 
-    }
-    TreeNode* sortedListToBST(ListNode* head) {
-        if(head==NULL) return NULL;
- if(head->next == NULL)
-            return new TreeNode(head->val);
-        ListNode*prev=NULL;
-        ListNode* middle=findMiddle(head,prev);
-       
-        prev->next=NULL;
-
-        TreeNode* root=new TreeNode(middle->val);
-        root->left=sortedListToBST(head);
-        root->right=sortedListToBST(middle->next);
-
-        return root; 
+        return convert(arr, 0, arr.size() - 1);
     }
 };
