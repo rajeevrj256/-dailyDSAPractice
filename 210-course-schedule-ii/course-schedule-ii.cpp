@@ -1,34 +1,37 @@
 class Solution {
 public:
+    vector<int>ans;
+    
+    bool isCycle(vector<vector<int>>&adj,int node,vector<int>&vis,vector<int>&currRec){
+        vis[node]=1;
+        currRec[node]=1;
+
+        for(auto& it:adj[node]){
+            if(!vis[it]){
+                if(isCycle(adj,it,vis,currRec)) return true;
+            }else if(currRec[it]){
+                return true;
+            }
+        }
+        currRec[node]=0;
+        ans.push_back(node);
+        return false;
+    }
     vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
         vector<vector<int>>adj(numCourses);
-        vector<int>indegree(numCourses);
-        for(auto prereq:prerequisites){
-            adj[prereq[1]].push_back(prereq[0]);
-            indegree[prereq[0]]++;
+        for(auto&  it:prerequisites){
+            adj[it[0]].push_back(it[1]);
 
         }
-
-        queue<int>node;
+        vector<int>vis(numCourses,0);
+        vector<int>currRec(numCourses,0);
         for(int i=0;i<numCourses;i++){
-            if(indegree[i]==0){
-
-            node.push(i);
-            }
+            if(!vis[i])
+            if(isCycle(adj,i,vis,currRec)) return {};
         }
-        vector<int>ans;
-        while(!node.empty()){
-            int temp=node.front();
-            node.pop();
+        
+        return ans;
 
-            for(auto & i:adj[temp]){
-                indegree[i]--;
-                if(indegree[i]==0) node.push(i);
-            }
 
-            ans.push_back(temp);
-        }
-
-        return (ans.size()==numCourses?ans:vector<int>{});
     }
 };
