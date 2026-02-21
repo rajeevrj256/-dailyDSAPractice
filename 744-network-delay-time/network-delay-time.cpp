@@ -23,7 +23,7 @@ public:
         while(!q.empty()){
             auto [wt,node]=q.top();
             q.pop();
-            if(wt>res[node]) continue;
+          
             for(auto &it:adj[node]){
                 int adjNode=it.first;
                 int adjWt=it.second;
