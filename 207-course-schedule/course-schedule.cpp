@@ -1,32 +1,45 @@
 class Solution {
 public:
-    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
-        vector<vector<int>>adj(numCourses);
-        vector<int>indegree(numCourses,0);
-
-        for(auto it:prerequisites){
-            adj[it[1]].push_back(it[0]);
-            indegree[it[0]]++;
-
-        }
-
-        queue<int>q;
-        for (int i = 0; i < numCourses; i++) {
-            if (indegree[i] == 0) q.push(i);
-        }
-
-        int course=0;
-        while(!q.empty()){
-            int top=q.front();
-            q.pop();
-            course++;
-            for(auto it:adj[top]){
-                indegree[it]--;
-
-                if(indegree[it]==0) q.push(it);
+    stack<int>st;
+    unordered_set<int>vis;
+    bool isCycleDetect(vector<vector<int>>&adj ,int course,vector<int>&vis,vector<int>&currRec){
+        vis[course]=1;
+        currRec[course]=1;
+        st.push(course);
+        for(auto it:adj[course]){
+            if(!vis[it]){
+                
+                if(isCycleDetect(adj,it,vis,currRec)) return true;;
+            }else if(currRec[it]){
+                return true;
             }
         }
 
-        return course==numCourses;
+        currRec[course]=0;
+
+
+        return false;
+    }
+
+   
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<vector<int>>adj(numCourses);
+        for(auto& it:prerequisites){
+            int u=it[1];
+            int v=it[0];
+            adj[u].push_back(v);
+        }
+        vector<int>vis(numCourses,0);
+        vector<int>currRec(numCourses,0);
+
+        for(int i=0;i<numCourses;i++){
+            if(!vis[i]){
+                 if(isCycleDetect(adj,i,vis,currRec)) return false;
+
+            }
+        }
+       
+        return true;
+
     }
 };
