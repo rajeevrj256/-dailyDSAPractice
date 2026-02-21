@@ -1,40 +1,47 @@
 class Solution {
 public:
+int minPrice=INT_MAX;
+    void dfs(int node, vector<vector<pair<int,int>>>& adj,int dst,int k,int cost){
+        if(k<0) return;
+
+        if(node==dst) {
+            minPrice=min(minPrice,cost);
+            return;
+        }
+
+        for(auto &it:adj[node]){
+            if(cost+it.second >= minPrice) continue;
+
+            dfs(it.first,adj,dst,k-1,cost+it.second);
+        }
+    }
     int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
-
+    
         vector<vector<pair<int,int>>>adj(n);
-        for(auto flight:flights){
-            adj[flight[0]].push_back({flight[1],flight[2]});
+        for(int i=0;i<flights.size();i++){
+            int u=flights[i][0];
+            int v=flights[i][1];
+            int wt=flights[i][2];
+            adj[u].push_back({v,wt});
         }
+       priority_queue<vector<int>,vector<vector<int>>,greater<vector<int>>>qp;
+       qp.push({0,src,0});
+       vector<int>stop(n,INT_MAX);
+        while(!qp.empty()){
+            auto top=qp.top();
+            qp.pop();
+            int cost=top[0];
+            int node=top[1];
+            int step=top[2];
+            if(node==dst) return cost;
 
-        queue<pair<int,pair<int,int>>>q;
-        // {stops,{node,price}}
-        q.push({0,{src,0}});
-        vector<int>dist(n,INT_MAX);
-        dist[src]=0;
-
-        while(!q.empty()){
-               int stop=q.front().first;
-               int adjnode=q.front().second.first;
-               int price=q.front().second.second;
-               q.pop();
-
-               if(stop>k)continue;
-
-               for(auto it:adj[adjnode]){
-                  int nextnode=it.first;
-                  int nextprice=it.second;
-                  if(price+nextprice<dist[nextnode] && stop<=k){
-                    q.push({stop+1,{nextnode,price+nextprice}});
-                    dist[nextnode]=price+nextprice;
-                  }
-               } 
+            if(step>k || step>stop[node]) continue;
+            stop[node]=step;
+            for(auto &it:adj[node]){
+                qp.push({cost+it.second,it.first,step+1});
+            }
         }
-
-        for(int i=0;i<n;i++){
-            if(dist[i]==INT_MAX) dist[i]=-1;
-        }
-
-        return dist[dst];
+        
+        return minPrice==INT_MAX?-1:minPrice;
     }
 };
