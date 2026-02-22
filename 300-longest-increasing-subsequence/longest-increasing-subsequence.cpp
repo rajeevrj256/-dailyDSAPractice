@@ -14,8 +14,15 @@ public:
         return dp[index][prevIndex+1]=max(skip,take);
     }
     int lengthOfLIS(vector<int>& nums) {
-         int n=nums.size();
-        vector<vector<int>>dp(n,vector<int>(n+1,-1));
-        return solve(nums,0,-1,dp);
+        vector<int>ans;
+        for(int i=0;i<nums.size();i++){
+            if(ans.size()==0 || ans.back()<nums[i]){
+                ans.push_back(nums[i]);
+            }else{
+                int lower_index=lower_bound(ans.begin(),ans.end(),nums[i])-ans.begin();
+                ans[lower_index]=nums[i];
+            }
+        }
+         return ans.size();
     }
 };
