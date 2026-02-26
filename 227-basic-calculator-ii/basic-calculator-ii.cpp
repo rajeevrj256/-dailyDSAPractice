@@ -1,10 +1,9 @@
 class Solution {
 public:
     int calculate(string s) {
-        long result = 0;
+        stack<int>st;
         char last_operator='+';
         int curr=0;
-        int last=0;
 
         for(int i=0;i<s.size();i++){
             char c=s[i];
@@ -15,16 +14,17 @@ public:
 
             if(!isdigit(c) && !isspace(c) || i==s.size()-1){
                 if(last_operator=='+'){
-                      result += last;
-                      last=curr;
+                      st.push(curr);
                 }else if (last_operator=='-'){
-                    result += last;
-                    last=-curr;
+                    st.push(-curr);
                 }else if(last_operator=='*'){
-                   
-                    last=last*curr;
+                    int top=st.top();
+                    st.pop();
+                    st.push(top*curr);
                 }else if(last_operator=='/'){
-                    last=last/curr;
+                    int top=st.top();
+                    st.pop();
+                    st.push(top/curr);
                 }
                 last_operator=c;
                 curr=0;
@@ -33,9 +33,13 @@ public:
             }
         }
 
-        
+        int ans=0;
+        while(!st.empty()){
+           ans+=st.top();
+           st.pop();
+        }
 
 
-        return result+last;
+        return ans;
     }
 };
