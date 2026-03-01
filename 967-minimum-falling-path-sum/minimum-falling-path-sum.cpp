@@ -1,53 +1,27 @@
 class Solution {
 public:
-    int help(vector<vector<int>>& matrix,vector<vector<int>>&dp,int i,int j,int n){
-        if(j>=n || j<0) return INT_MAX;
-        if(i==n-1)return matrix[i][j];
+    int ans=INT_MAX;
+    int helper(vector<vector<int>>&matrix,vector<vector<int>>&dp,int row,int col){
+         if(col<0 || col>matrix[0].size()-1 || row<0 || row>matrix.size()-1) return INT_MAX;
+    if(row==matrix.size()-1) return matrix[row][col];
+   
+    if(dp[row][col]!=INT_MAX) return dp[row][col];
 
-        if(dp[i][j]!=-1)return dp[i][j];
 
-        int  down=help(matrix,dp,i+1,j,n);
-        int  down_left=help(matrix,dp,i+1,j-1,n);
-        int  down_right=help(matrix,dp,i+1,j+1,n);
-
-        return dp[i][j]=matrix[i][j]+min({down,down_left,down_right});
+    int left=helper(matrix,dp,row+1,col-1);
+    int right=helper(matrix,dp,row+1,col+1);
+    int bottom=helper(matrix,dp,row+1,col);
+int mini=min({left,right,bottom});
+if(mini==INT_MAX) return dp[row][col]=INT_MAX;
+    return dp[row][col]=matrix[row][col]+mini;
     }
     int minFallingPathSum(vector<vector<int>>& matrix) {
         int n=matrix.size();
-        vector<vector<int>>dp(n,vector<int>(n,-1));
-        int res=INT_MAX;
-
-        for(int i=0;i<n;i++){
-            dp[0][i]=matrix[0][i];
+        int m=matrix[0].size();
+        vector<vector<int>>dp(n,vector<int>(m,INT_MAX));
+        for(int i=0;i<m;i++){
+            ans=min(ans,helper(matrix,dp,0,i));
         }
-
-        for(int i=1;i<n;i++){
-            for(int j=0;j<n;j++){
-                int down=matrix[i][j]+dp[i-1][j];
-
-                int down_left=matrix[i][j];
-                if(j-1>=0){
-                    down_left+=dp[i-1][j-1];
-                }else{
-                    down_left=INT_MAX;
-                }
-
-                int down_right=matrix[i][j];
-
-                if(j+1<n){
-                    down_right+=dp[i-1][j+1];
-                }else{
-                    down_right=INT_MAX;
-                }
-
-                dp[i][j]=min({down,down_right,down_left});
-            }
-        }
-
-        for(int i=0;i<n;i++){
-
-        res=min(res,dp[n-1][i]);
-        }
-        return res;
+       return ans;
     }
 };
