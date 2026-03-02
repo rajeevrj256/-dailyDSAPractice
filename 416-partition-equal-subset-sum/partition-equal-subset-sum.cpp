@@ -1,34 +1,22 @@
 class Solution {
 public:
+    bool solve(vector<int>& nums,int index,int target,vector<vector<int>>&dp){
+        if(target==0) return true;
+        if(index>=nums.size() || target<0) return false;
 
-    bool help(vector<int>&nums,vector<vector<int>>&dp,int index,int target){
-
-        if(target==0)return true;
-        if (index == 0) return (nums[0] == target);
-
-        if(dp[index][target]!=-1)return dp[index][target];
-
-        bool skip=help(nums,dp,index-1,target);
-        bool take=false;
-         if (nums[index] <= target) {
-            take=help(nums,dp,index-1,target-nums[index]);
-         }
-
-        return dp[index][target]=take|| skip;
+        if(dp[index][target]!=-1) return dp[index][target];
+        return dp[index][target]=solve(nums,index+1,target-nums[index],dp) || solve(nums,index+1,target,dp);
     }
     bool canPartition(vector<int>& nums) {
         int sum=0;
-        int n=nums.size();
-
         for(int num:nums){
             sum+=num;
         }
-        if(sum%2!=0)return false;
+
+        if(sum%2!=0) return false;
         int target=sum/2;
-
-        
-        vector<vector<int>> dp(n, vector<int>(sum/2+1, -1));
-
-        return help(nums,dp,n-1,sum/2);
+        int n=nums.size();
+        vector<vector<int>>dp(n,vector<int>(target+1,-1));
+        return solve(nums,0,target,dp);
     }
 };
