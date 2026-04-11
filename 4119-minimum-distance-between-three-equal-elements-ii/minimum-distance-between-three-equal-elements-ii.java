@@ -1,21 +1,5 @@
 class Solution {
-    public int findMiniWindow(List<Integer> index){
-        int i=0;
-        int j=0;
-        int n=index.size();
-        int minDist=Integer.MAX_VALUE;
-        while(j<n){
-            if(j-i+1<3)j++;
-            else if(j-i+1==3){
-                int dist=2*(index.get(j)-index.get(i));
-                minDist=Math.min(minDist,dist);
-                i++;
-                j++;
-            }
-        }
-
-        return minDist;
-    }
+    
     public int minimumDistance(int[] nums) {
         Map<Integer,List<Integer>>hash=new HashMap<>();
 
