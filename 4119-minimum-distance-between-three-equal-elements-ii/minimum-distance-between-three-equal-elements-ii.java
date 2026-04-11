@@ -26,7 +26,10 @@ class Solution {
         int mini = Integer.MAX_VALUE;
         for(List<Integer>arr:hash.values()){
             if(arr.size()>=3){
-                mini=Math.min(mini,findMiniWindow(arr));
+               for(int i=0;i+2<arr.size();i++){
+               int dist=2*(arr.get(i+2)-arr.get(i));
+               mini=Math.min(mini,dist);
+               }
             }
         }
 
