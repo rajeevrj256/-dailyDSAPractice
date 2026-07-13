@@ -12,8 +12,8 @@ class Solution {
             }
 String key="";
             for(int j=0;j<26;j++){
-                key=key+(freq[j]);
-                key=key+('#');
+                key+=(freq[j]);
+                key+=('#');
             }
             
              String k = key;
