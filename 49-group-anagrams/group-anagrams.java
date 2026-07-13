@@ -10,13 +10,13 @@ class Solution {
                freq[word.charAt(j)-'a']++;
 
             }
-StringBuilder key = new StringBuilder();;
+String key="";
             for(int j=0;j<26;j++){
-                key.append(freq[j]);
-                key.append('#');
+                key=key+(freq[j]);
+                key=key+('#');
             }
             
-             String k = key.toString();
+             String k = key;
             if(!hash.containsKey(k)){
                 hash.put(k,new ArrayList<>());
             }
