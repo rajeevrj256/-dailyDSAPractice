@@ -1,15 +1,18 @@
 class Solution {
      public void backtracking(int []nums,List<Integer> temp,List<List<Integer>> ans,int index){
-        
+        if(index==nums.length){
             ans.add(new ArrayList<>(temp));
-           
-        for(int i=index;i<nums.length;i++){
-            if(i>index && nums[i]==nums[i-1]) continue;
-
-            temp.add(nums[i]);
-            backtracking(nums,temp,ans,i+1);
-            temp.remove(temp.size() - 1);
+            return;
         }
+
+       
+        temp.add(nums[index]);  
+        backtracking(nums,temp,ans,index+1);
+
+        temp.remove(temp.size()-1);
+
+        while(index+1<nums.length && nums[index]==nums[index+1]) index++;
+        backtracking(nums,temp,ans,index+1);
 
 
 
